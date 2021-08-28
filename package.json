@@ -1,0 +1,20 @@
+{
+  "name": "performanceapp",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hugo Luna",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^13.2.3"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "drivelist": "^9.2.4",
+    "fetch-installed-software": "^0.0.7"
+  }
+}
