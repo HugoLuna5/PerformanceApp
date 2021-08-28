@@ -44,53 +44,6 @@ function createWindow() {
   //mainWindow.webContents.openDevTools();
 }
 
-function sysProfileTxtToJson(data) {
-  return (
-    new Promise() <
-    any >
-    ((res) => {
-      let stream = new Readable();
-      stream.push(data);
-      stream.push(null);
-
-      let lineReader = createInterface(stream);
-      let apps = { Applications: [] };
-      let lastEntry = "";
-      let appPrefix = "    ";
-      let appPropertyPrefix = "      ";
-      let lastToggle,
-        props = false;
-      lineReader.on("line", (line) => {
-        if (line == "" && !lastToggle) {
-          props = false;
-          return;
-        }
-
-        if (line.startsWith(appPrefix) && !props) {
-          lastEntry = line.trim().replace(":", "");
-          lastToggle = true;
-          let current = {};
-          current["ApplicationName"] = lastEntry;
-          apps.Applications.push(current);
-          props = true;
-          return;
-        }
-
-        if (line.startsWith(appPropertyPrefix) && props) {
-          lastToggle = false;
-          let tokens = line.trim().split(":");
-          let last = apps.Applications[apps.Applications.length - 1];
-          last[tokens[0]] = tokens[1].trim();
-        }
-      });
-
-      lineReader.on("close", () => {
-        res(apps);
-      });
-    })
-  );
-}
-
 function formatBytes(a, b = 2, k = 1024) {
   with (Math) {
     let d = floor(log(a) / log(k));
