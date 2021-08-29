@@ -562,6 +562,17 @@
               </div>
             </div>
 
+            <!--Audio-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-audio"
+              role="tabpanel"
+              aria-labelledby="v-pills-audio-tab"
+            >
+              <h3 id="sizeAudioAdapter">Adaptadores de audio</h3>
+              <ul class="list-group" id="containerAudioControllers"></ul>
+            </div>
+
             <div
               class="tab-pane fade"
               id="v-pills-xd"
@@ -630,6 +641,12 @@
       let versionBios = document.getElementById("versionBios");
       let releaseDateBios = document.getElementById("releaseDateBios");
 
+      //audio
+      let sizeAudioAdapter = document.getElementById("sizeAudioAdapter");
+      let containerAudioControllers = document.getElementById(
+        "containerAudioControllers"
+      );
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -656,12 +673,12 @@
         loadUINetworkAdapters(info.networkInterfaces);
         loadUIGraphicsControllers(info.graphics.controllers);
         loadUIAllApps(info.apps);
-
         manufacturerMainBoard.value = info.baseboard.manufacturer;
         modelMainBoard.value = info.baseboard.model;
         brandBios.value = info.bios.vendor;
         versionBios.value = info.bios.version;
         releaseDateBios.value = info.bios.releaseDate;
+        loadUIAudioAdapters(info.audio);
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -726,6 +743,18 @@
       window.onload = function () {
         ipcRenderer.send("newInfo", "newInfo");
       };
+
+      function loadUIAudioAdapters(adapters) {
+        for (let i = 0; i < adapters.length; i++) {
+          let item =
+            '<li class="list-group-item">' +
+            adapters[i].manufacturer +
+            " " +
+            adapters[i].name +
+            "</li>";
+          containerAudioControllers.innerHTML += item;
+        }
+      }
 
       function requestNewInfo() {
         setTimeout(function () {
