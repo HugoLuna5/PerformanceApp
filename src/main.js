@@ -62,45 +62,47 @@ function showIndexWindow() {
 function getInfo() {
   var ram = formatBytes(os.totalmem());
   var freeRam = formatBytes(os.freemem());
-  let proc = exec("ls /Applications");
+
+  let proc = exec("wmic product get name");
   let results = "";
   proc.stdout.on("data", (data) => {
     results += `${data}`;
   });
   proc.on("close", async (code) => {
     console.log(results);
-  });
 
-  si.cpu()
-    .then((cpuInfo) => {
-      cpuInfoOsu.usage().then((cpuPercentage) => {
-        si.system().then((system) => {
-          si.memLayout().then((memInfo) => {
-            si.baseboard().then((baseboard) => {
-              si.bios().then((bios) => {
-                si.chassis().then((chassis) => {
-                  si.cpuTemperature().then((cpuTemperature) => {
-                    si.graphics().then((graphics) => {
-                      si.networkInterfaces((networkInterfaces) => {
-                        var data = {
-                          graphics: graphics,
-                          cpuTemperature: cpuTemperature,
-                          bios: bios,
-                          chassis: chassis,
-                          system: system,
-                          baseboard: baseboard,
-                          memory: memInfo,
-                          ram: ram,
-                          free: freeRam,
-                          cpu: cpuInfo,
-                          cpuPercentage: cpuPercentage,
-                          networkInterfaces: networkInterfaces,
-                          arch: os.arch(),
-                          systemName: os.type(),
-                          platform: os.platform(),
-                        };
+    si.cpu()
+      .then((cpuInfo) => {
+        cpuInfoOsu.usage().then((cpuPercentage) => {
+          si.system().then((system) => {
+            si.memLayout().then((memInfo) => {
+              si.baseboard().then((baseboard) => {
+                si.bios().then((bios) => {
+                  si.chassis().then((chassis) => {
+                    si.cpuTemperature().then((cpuTemperature) => {
+                      si.graphics().then((graphics) => {
+                        si.networkInterfaces((networkInterfaces) => {
+                          var data = {
+                            apps: results.split("\n"),
+                            graphics: graphics,
+                            cpuTemperature: cpuTemperature,
+                            bios: bios,
+                            chassis: chassis,
+                            system: system,
+                            baseboard: baseboard,
+                            memory: memInfo,
+                            ram: ram,
+                            free: freeRam,
+                            cpu: cpuInfo,
+                            cpuPercentage: cpuPercentage,
+                            networkInterfaces: networkInterfaces,
+                            arch: os.arch(),
+                            systemName: os.type(),
+                            platform: os.platform(),
+                          };
 
-                        indexWindow.webContents.send("data", data);
+                          indexWindow.webContents.send("data", data);
+                        });
                       });
                     });
                   });
@@ -109,9 +111,9 @@ function getInfo() {
             });
           });
         });
-      });
-    })
-    .catch((error) => console.error(error));
+      })
+      .catch((error) => console.error(error));
+  });
 }
 
 function formatBytes(a, b = 2, k = 1024) {

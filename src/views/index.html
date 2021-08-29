@@ -456,6 +456,17 @@
               <div id="containerGraphicsControllers"></div>
             </div>
 
+            <!--Aplicaciones instaladas-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-aplicaciones"
+              role="tabpanel"
+              aria-labelledby="v-pills-aplicaciones-tab"
+            >
+              <h3 id="sizeAllApps">Aplicaciones instaldas</h3>
+              <ul class="list-group" id="containerListApps"></ul>
+            </div>
+
             <div
               class="tab-pane fade"
               id="v-pills-xd"
@@ -509,6 +520,10 @@
         "containerGraphicsControllers"
       );
 
+      //apps
+      let sizeAllApps = document.getElementById("sizeAllApps");
+      let containerListApps = document.getElementById("containerListApps");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -532,6 +547,7 @@
         voltageConfigured.value = info.memory[0].voltageConfigured;
         loadUINetworkAdapters(info.networkInterfaces);
         loadUIGraphicsControllers(info.graphics.controllers);
+        loadUIAllApps(info.apps);
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -616,5 +632,6 @@
     </script>
     <script src="./assets/js/ui/network.js"></script>
     <script src="./assets/js/ui/graphics.js"></script>
+    <script src="./assets/js/ui/apps.js"></script>
   </body>
 </html>
