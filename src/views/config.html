@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <title>PIC</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-8 offset-2">
+          <div class="card mt-3">
+            <div class="card-body">
+              <div style="text-align: center">
+                <img
+                  src="./assets/img/logo.png"
+                  width="70"
+                  height="60"
+                  alt=""
+                />
+              </div>
+
+              <h4 class="text-center mt-3 text-center">
+                Performance Information Collector
+              </h4>
+
+              <div>
+                <div class="form-group text-center">
+                  <label for="token"
+                    >Ingresa el token de autorización de tu servidor</label
+                  >
+                  <input
+                    type="text"
+                    name="token"
+                    id="token"
+                    class="form-control mt-1"
+                    required
+                  />
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                  <button
+                    id="btnAction"
+                    class="btn btn-outline-primary"
+                    type="button"
+                  >
+                    ACEPTAR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- You can also require other files to run in this process -->
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      let element = document.getElementById("btnAction");
+
+      element.addEventListener("click", function () {
+        let token = document.getElementById("token").value;
+        ipcRenderer.send("saveToken", token);
+        window.location.href = "index.html";
+        location.href = "index.html";
+        console.log("GG");
+      });
+    </script>
+  </body>
+</html>

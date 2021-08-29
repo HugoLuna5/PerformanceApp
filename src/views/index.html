@@ -1,29 +1,343 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <title>PIC</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
+  <body>
+    <div class="container">
+      <div class="row mt-3">
+        <div class="col-4">
+          <div class="d-flex align-items-start">
+            <div
+              class="nav flex-column nav-pills me-3"
+              id="v-pills-tab"
+              role="tablist"
+              aria-orientation="vertical"
+            >
+              <button
+                class="nav-link active"
+                id="v-pills-cpu-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#v-pills-cpu"
+                type="button"
+                role="tab"
+                aria-controls="v-pills-cpu"
+                aria-selected="true"
+              >
+                CPU
+              </button>
+              <button
+                class="nav-link"
+                id="v-pills-memoria-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#v-pills-memoria"
+                type="button"
+                role="tab"
+                aria-controls="v-pills-memoria"
+                aria-selected="false"
+              >
+                Memoria
+              </button>
+              <button
+                class="nav-link"
+                id="v-pills-red-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#v-pills-red"
+                type="button"
+                role="tab"
+                aria-controls="v-pills-red"
+                aria-selected="false"
+              >
+                Red
+              </button>
+              <button
+                class="nav-link"
+                id="v-pills-almacenamiento-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#v-pills-almacenamiento"
+                type="button"
+                role="tab"
+                aria-controls="v-pills-almacenamiento"
+                aria-selected="false"
+              >
+                Almacenamiento
+              </button>
+            </div>
+          </div>
+        </div>
 
-  <title>Hello World!</title>
-</head>
+        <div class="col-8">
+          <div class="tab-content card card-body" id="v-pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="v-pills-cpu"
+              role="tabpanel"
+              aria-labelledby="v-pills-cpu-tab"
+            >
+              <h3>Información del procesador</h3>
 
-<body>
-  <h1>Hello World!</h1>
-  We are using Node.js <span id="node-version"></span>,
-  Chromium <span id="chrome-version"></span>,
-  and Electron <span id="electron-version"></span>.
+              <div id="containerInfo">
+                <!--CPU name-->
+                <div class="form-group">
+                  <label for="nombreCPU">Nombre</label>
+                  <input
+                    type="text"
+                    name="nombreCPU"
+                    id="nombreCPU"
+                    disabled
+                    class="form-control"
+                  />
+                </div>
 
-  <!-- You can also require other files to run in this process -->
-  <script>
-    const { ipcRenderer } = require('electron');
+                <!--socket-->
+                <div class="form-group">
+                  <label for="paqueteCPU">Paquete</label>
+                  <input
+                    type="text"
+                    name="paqueteCPU"
+                    id="paqueteCPU"
+                    disabled
+                    class="form-control"
+                  />
+                </div>
 
-    ipcRenderer.on('data', (event, arg) => {
+                <!--Información de nucleos-->
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="numNucleos">Nucleos</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="numNucleos"
+                        disabled
+                      />
+                    </div>
+                  </div>
 
-      // Update the second window label content with the data sent from
-      // the first window :) !
-      console.log(arg)
-    });
-  </script>
-</body>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="numThreads">Hilos</label>
 
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="numThreads"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!--Speed-->
+                <div class="form-group">
+                  <label for="speedCore">Velocidad</label>
+                  <input
+                    type="text"
+                    name="speedCore"
+                    id="speedCore"
+                    disabled
+                    class="form-control"
+                  />
+                </div>
+
+                <h6 class="mt-2">Caches</h6>
+
+                <div class="row mt-2">
+                  <div class="col">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"
+                        >L1 Data</span
+                      >
+                      <input
+                        id="l1data"
+                        type="text"
+                        class="form-control"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"
+                        >L1 Inst</span
+                      >
+                      <input
+                        id="l1inst"
+                        type="text"
+                        class="form-control"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"
+                        >Level 2</span
+                      >
+                      <input
+                        id="level2"
+                        type="text"
+                        class="form-control"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+
+                    <div class="input-group mb-3">
+                      <span class="input-group-text" id="basic-addon1"
+                        >Level 3</span
+                      >
+                      <input
+                        id="level3"
+                        type="text"
+                        class="form-control"
+                        aria-describedby="basic-addon1"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!--Chart-->
+                <div class="row">
+                  <div class="col">
+                    <canvas id="speedChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="v-pills-profile"
+              role="tabpanel"
+              aria-labelledby="v-pills-profile-tab"
+            >
+              ...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./assets/js/bootstrap.js"></script>
+    <script src="./assets/js/chart.js"></script>
+    <!-- You can also require other files to run in this process -->
+
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      var speedCanvas = document.getElementById("speedChart");
+      var lineChart = null;
+      let nombreCPU = document.getElementById("nombreCPU");
+      let paqueteCPU = document.getElementById("paqueteCPU");
+      let speedCore = document.getElementById("speedCore");
+      let numNucleos = document.getElementById("numNucleos");
+      let numThreads = document.getElementById("numThreads");
+      let l1data = document.getElementById("l1data");
+      let l1inst = document.getElementById("l1inst");
+      let level2 = document.getElementById("level2");
+      let level3 = document.getElementById("level3");
+
+      ipcRenderer.on("data", (event, info) => {
+        console.log(info);
+        nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
+
+        paqueteCPU.value = info.cpu.socket;
+        numNucleos.value = info.cpu.cores;
+        numThreads.value = info.cpu.physicalCores;
+        speedCore.value = info.cpu.speedMax + " GHz";
+        l1data.value = formatBytes(info.cpu.cache.l1d);
+        l1inst.value = formatBytes(info.cpu.cache.l1i);
+        level2.value = formatBytes(info.cpu.cache.l2);
+        level3.value = formatBytes(info.cpu.cache.l3);
+
+        var speedData = {
+          labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
+          datasets: [
+            {
+              label: "% de uso",
+              data: [info.cpuPercentage],
+              borderColor: "#3188f9",
+              backgroundColor: "transparent",
+            },
+          ],
+        };
+
+        var chartOptions = {
+          legend: {
+            display: true,
+            position: "top",
+            labels: {
+              boxWidth: 100,
+              fontColor: "blue",
+            },
+          },
+          scales: {
+            y: {
+              // defining min and max so hiding the dataset does not change scale range
+              min: 0,
+              max: 100,
+              ticks: {
+                // forces step size to be 50 units
+                stepSize: 5,
+              },
+            },
+          },
+        };
+
+        lineChart = new Chart(speedCanvas, {
+          type: "line",
+          data: speedData,
+          options: chartOptions,
+        });
+
+        setTimeout(function () {
+          ipcRenderer.send("newCPUInfo", "newCPUInfo");
+        }, 10000);
+      });
+
+      ipcRenderer.on("responseNewCPUInfo", (event, info) => {
+        let size = lineChart.data.datasets[0].data.length;
+        var current = lineChart.data.datasets[0].data;
+        console.log(size);
+
+        if (size >= 7) {
+          current.shift();
+        }
+        current.push(info);
+
+        lineChart.data.datasets[0].data = current;
+        lineChart.update();
+        requestNewInfo();
+      });
+
+      window.onload = function () {
+        ipcRenderer.send("newInfo", "newInfo");
+      };
+
+      function requestNewInfo() {
+        setTimeout(function () {
+          ipcRenderer.send("newCPUInfo", "newCPUInfo");
+        }, 10000);
+      }
+
+      function formatBytes(a, b = 2, k = 1024) {
+        with (Math) {
+          let d = floor(log(a) / log(k));
+          return 0 == a
+            ? "0 Bytes"
+            : parseFloat((a / pow(k, d)).toFixed(max(0, b))) +
+                " " +
+                ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d];
+        }
+      }
+    </script>
+  </body>
 </html>

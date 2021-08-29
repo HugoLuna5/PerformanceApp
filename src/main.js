@@ -1,22 +1,65 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { exec } = require("child_process");
+const si = require("systeminformation");
+
+var osu = require("node-os-utils");
+var cpuInfoOsu = osu.cpu;
 
 const path = require("path");
 const os = require("os");
+const Store = require("./store.js");
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
+const store = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: "user-preferences",
+  defaults: {
+    // 800x600 is the default size of our window
+    token: "",
+  },
+});
+
+var indexWindow = null;
+/**
+ * Mostrar la ventana de configuracion
+ */
+function showConfigWindow() {
+  const configWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: path.join(__dirname, "views/assets/img/logo.png"),
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       preload: path.join(__dirname, "/preload.js"),
     },
+    title: "PIC",
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile("src/views/index.html");
+  configWindow.loadFile("src/views/config.html");
+}
+
+function showIndexWindow() {
+  indexWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    icon: path.join(__dirname, "views/assets/img/logo.png"),
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      preload: path.join(__dirname, "/preload.js"),
+    },
+    title: "PIC",
+  });
+
+  // and load the index.html of the app.
+  indexWindow.loadFile("src/views/index.html");
+  getInfo();
+}
+
+function getInfo() {
   var ram = formatBytes(os.totalmem());
   var freeRam = formatBytes(os.freemem());
   let proc = exec("ls /Applications");
@@ -28,20 +71,24 @@ function createWindow() {
     console.log(results);
   });
 
-  var data = {
-    ram: ram,
-    free: freeRam,
-    cpu: os.cpus(),
-    network: os.networkInterfaces(),
-    arch: os.arch(),
-    systemName: os.type(),
-    platform: os.platform(),
-  };
+  si.cpu()
+    .then((cpuInfo) => {
+      cpuInfoOsu.usage().then((cpuPercentage) => {
+        var data = {
+          ram: ram,
+          free: freeRam,
+          cpu: cpuInfo,
+          cpuPercentage: cpuPercentage,
+          network: os.networkInterfaces(),
+          arch: os.arch(),
+          systemName: os.type(),
+          platform: os.platform(),
+        };
 
-  mainWindow.webContents.send("data", data);
-
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+        indexWindow.webContents.send("data", data);
+      });
+    })
+    .catch((error) => console.error(error));
 }
 
 function formatBytes(a, b = 2, k = 1024) {
@@ -55,25 +102,39 @@ function formatBytes(a, b = 2, k = 1024) {
   }
 }
 
+ipcMain.on("saveToken", function (event, args) {
+  store.set("token", args);
+});
+
+ipcMain.on("newCPUInfo", function (event, arg) {
+  cpuInfoOsu.usage().then((cpuPercentage) => {
+    var data = cpuPercentage;
+    indexWindow.webContents.send("responseNewCPUInfo", data);
+  });
+});
+
+ipcMain.on("newInfo", function (event, args) {
+  getInfo();
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow();
+  let token = store.get("token");
+  console.log(token);
+
+  if (token == "") {
+    showConfigWindow();
+  } else {
+    showIndexWindow();
+  }
 
   app.on("activate", function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

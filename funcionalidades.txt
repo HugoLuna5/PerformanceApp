@@ -1,0 +1,15 @@
+cpu *
+memoria *
+sistema y otros
+adaptadores de red *
+aplicaciones instaladas
+graficos
+hardware
+almacenamiento *
+perifericos
+entrada y salida
+reporte de errores
+configuracion
+ - notificaciones
+ - apagado remoto
+ - reinicio remoto
