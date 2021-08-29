@@ -333,6 +333,7 @@
               </div>
             </div>
 
+            <!--Memoria ram-->
             <div
               class="tab-pane fade"
               id="v-pills-memoria"
@@ -388,6 +389,33 @@
                       type="text"
                       name="formFactor"
                       id="formFactor"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="memMax">Memoria maxima</label>
+                    <input
+                      type="text"
+                      name="memMax"
+                      id="memMax"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="memSlots">Slots</label>
+                    <input
+                      type="text"
+                      name="memSlots"
+                      id="memSlots"
                       disabled
                       class="form-control"
                     />
@@ -467,6 +495,73 @@
               <ul class="list-group" id="containerListApps"></ul>
             </div>
 
+            <!--Tarjeta madre-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-mainboard"
+              role="tabpanel"
+              aria-labelledby="v-pills-mainboard-tab"
+            >
+              <h3>Tarjeta madre</h3>
+
+              <div class="form-group">
+                <label for="manufacturerMainBoard">Fabricante</label>
+                <input
+                  type="text"
+                  name="manufacturerMainBoard"
+                  id="manufacturerMainBoard"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="modelMainBoard">Modelo</label>
+                <input
+                  type="text"
+                  name="modelMainBoard"
+                  id="modelMainBoard"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <h5 class="mt-2">BIOS</h5>
+
+              <div class="form-group">
+                <label for="brandBios">Marca</label>
+                <input
+                  type="text"
+                  name="brandBios"
+                  id="brandBios"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="versionBios">Versión</label>
+                <input
+                  type="text"
+                  name="versionBios"
+                  id="versionBios"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="releaseDateBios">Fecha de lanzamiento</label>
+                <input
+                  type="text"
+                  name="releaseDateBios"
+                  id="releaseDateBios"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+            </div>
+
             <div
               class="tab-pane fade"
               id="v-pills-xd"
@@ -504,6 +599,8 @@
       let freeRam = document.getElementById("freeRam");
       let sizeDimsRam = document.getElementById("sizeDimsRam");
       let formFactor = document.getElementById("formFactor");
+      let memMax = document.getElementById("memMax");
+      let memSlots = document.getElementById("memSlots");
       let typeRam = document.getElementById("typeRam");
       let frequencyRam = document.getElementById("frequencyRam");
       let voltageConfigured = document.getElementById("voltageConfigured");
@@ -524,6 +621,15 @@
       let sizeAllApps = document.getElementById("sizeAllApps");
       let containerListApps = document.getElementById("containerListApps");
 
+      //mainboard
+      let manufacturerMainBoard = document.getElementById(
+        "manufacturerMainBoard"
+      );
+      let modelMainBoard = document.getElementById("modelMainBoard");
+      let brandBios = document.getElementById("brandBios");
+      let versionBios = document.getElementById("versionBios");
+      let releaseDateBios = document.getElementById("releaseDateBios");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -542,12 +648,20 @@
         freeRam.value = info.free;
         sizeDimsRam.value = info.memory.length;
         formFactor.value = info.memory[0].formFactor;
+        memMax.value = formatBytes(info.baseboard.memMax);
+        memSlots.value = info.baseboard.memSlots;
         typeRam.value = info.memory[0].partNum;
         frequencyRam.value = info.memory[0].clockSpeed + " MHz";
         voltageConfigured.value = info.memory[0].voltageConfigured;
         loadUINetworkAdapters(info.networkInterfaces);
         loadUIGraphicsControllers(info.graphics.controllers);
         loadUIAllApps(info.apps);
+
+        manufacturerMainBoard.value = info.baseboard.manufacturer;
+        modelMainBoard.value = info.baseboard.model;
+        brandBios.value = info.bios.vendor;
+        versionBios.value = info.bios.version;
+        releaseDateBios.value = info.bios.releaseDate;
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],

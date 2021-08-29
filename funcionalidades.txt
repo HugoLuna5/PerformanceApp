@@ -5,7 +5,7 @@ graficos *
 memoria *
 perifericos 
 aplicaciones *
-tarjeta madre 
+tarjeta madre *
 almacenamiento 
 entrada y salida 
 
