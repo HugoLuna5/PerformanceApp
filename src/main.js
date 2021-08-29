@@ -74,20 +74,38 @@ function getInfo() {
   si.cpu()
     .then((cpuInfo) => {
       cpuInfoOsu.usage().then((cpuPercentage) => {
-        si.memLayout().then((memInfo) => {
-          var data = {
-            memory: memInfo,
-            ram: ram,
-            free: freeRam,
-            cpu: cpuInfo,
-            cpuPercentage: cpuPercentage,
-            network: os.networkInterfaces(),
-            arch: os.arch(),
-            systemName: os.type(),
-            platform: os.platform(),
-          };
+        si.system().then((system) => {
+          si.memLayout().then((memInfo) => {
+            si.baseboard().then((baseboard) => {
+              si.bios().then((bios) => {
+                si.chassis().then((chassis) => {
+                  si.cpuTemperature().then((cpuTemperature) => {
+                    si.graphics().then((graphics) => {
+                      var data = {
+                        graphics: graphics,
+                        cpuTemperature: cpuTemperature,
+                        bios: bios,
+                        chassis: chassis,
+                        system: system,
+                        baseboard: baseboard,
+                        memory: memInfo,
+                        ram: ram,
+                        free: freeRam,
+                        cpu: cpuInfo,
+                        cpuPercentage: cpuPercentage,
+                        network: os.networkInterfaces(),
+                        arch: os.arch(),
+                        systemName: os.type(),
+                        platform: os.platform(),
+                      };
 
-          indexWindow.webContents.send("data", data);
+                      indexWindow.webContents.send("data", data);
+                    });
+                  });
+                });
+              });
+            });
+          });
         });
       });
     })

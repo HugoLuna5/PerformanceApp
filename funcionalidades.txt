@@ -1,15 +1,17 @@
 cpu *
+red *
+audio *
+graficos *
 memoria *
-sistema y otros
-adaptadores de red *
-aplicaciones instaladas
-graficos
-hardware
+perifericos *
+aplicaciones *
+tarjeta madre *
 almacenamiento *
-perifericos
-entrada y salida
-reporte de errores
-configuracion
+entrada y salida *
+
+sistema y otros ?
+reporte de errores *
+configuracion *
  - notificaciones
  - apagado remoto
  - reinicio remoto
