@@ -74,18 +74,21 @@ function getInfo() {
   si.cpu()
     .then((cpuInfo) => {
       cpuInfoOsu.usage().then((cpuPercentage) => {
-        var data = {
-          ram: ram,
-          free: freeRam,
-          cpu: cpuInfo,
-          cpuPercentage: cpuPercentage,
-          network: os.networkInterfaces(),
-          arch: os.arch(),
-          systemName: os.type(),
-          platform: os.platform(),
-        };
+        si.memLayout().then((memInfo) => {
+          var data = {
+            memory: memInfo,
+            ram: ram,
+            free: freeRam,
+            cpu: cpuInfo,
+            cpuPercentage: cpuPercentage,
+            network: os.networkInterfaces(),
+            arch: os.arch(),
+            systemName: os.type(),
+            platform: os.platform(),
+          };
 
-        indexWindow.webContents.send("data", data);
+          indexWindow.webContents.send("data", data);
+        });
       });
     })
     .catch((error) => console.error(error));

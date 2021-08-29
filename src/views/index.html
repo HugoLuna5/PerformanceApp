@@ -215,9 +215,110 @@
 
             <div
               class="tab-pane fade"
-              id="v-pills-profile"
+              id="v-pills-memoria"
               role="tabpanel"
-              aria-labelledby="v-pills-profile-tab"
+              aria-labelledby="v-pills-memoria-tab"
+            >
+              <h3>Información de la memoria RAM</h3>
+
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="totalRam">Total</label>
+                    <input
+                      type="text"
+                      name="totalRam"
+                      id="totalRam"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="freeRam">Libre</label>
+                    <input
+                      type="text"
+                      name="freeRam"
+                      id="freeRam"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="sizeDimsRam">Ranuras usadas</label>
+                    <input
+                      type="text"
+                      name="sizeDimsRam"
+                      id="sizeDimsRam"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="formFactor">Factor de forma</label>
+                    <input
+                      type="text"
+                      name="formFactor"
+                      id="formFactor"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="typeRam">Tipo</label>
+                    <input
+                      type="text"
+                      name="typeRam"
+                      id="typeRam"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="frequencyRam">Fecuencia</label>
+                    <input
+                      type="text"
+                      name="frequencyRam"
+                      id="frequencyRam"
+                      disabled
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="voltageConfigured">Voltage</label>
+                <input
+                  type="text"
+                  name="voltageConfigured"
+                  id="voltageConfigured"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="v-pills-xd"
+              role="tabpanel"
+              aria-labelledby="v-pills-xd-tab"
             >
               ...
             </div>
@@ -245,6 +346,15 @@
       let level2 = document.getElementById("level2");
       let level3 = document.getElementById("level3");
 
+      //Memoria
+      let totalRam = document.getElementById("totalRam");
+      let freeRam = document.getElementById("freeRam");
+      let sizeDimsRam = document.getElementById("sizeDimsRam");
+      let formFactor = document.getElementById("formFactor");
+      let typeRam = document.getElementById("typeRam");
+      let frequencyRam = document.getElementById("frequencyRam");
+      let voltageConfigured = document.getElementById("voltageConfigured");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -257,6 +367,15 @@
         l1inst.value = formatBytes(info.cpu.cache.l1i);
         level2.value = formatBytes(info.cpu.cache.l2);
         level3.value = formatBytes(info.cpu.cache.l3);
+
+        //Memoria
+        totalRam.value = info.ram;
+        freeRam.value = info.free;
+        sizeDimsRam.value = info.memory.length;
+        formFactor.value = info.memory[0].formFactor;
+        typeRam.value = info.memory[0].partNum;
+        frequencyRam.value = info.memory[0].clockSpeed + " MHz";
+        voltageConfigured.value = info.memory[0].voltageConfigured;
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
