@@ -573,6 +573,17 @@
               <ul class="list-group" id="containerAudioControllers"></ul>
             </div>
 
+            <!--Alamcenamiento-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-almacenamiento"
+              role="tabpanel"
+              aria-labelledby="v-pills-almacenamiento-tab"
+            >
+              <h3 id="sizeDisks">Unidades de Almacenamiento</h3>
+              <div id="containerDisks"></div>
+            </div>
+
             <div
               class="tab-pane fade"
               id="v-pills-xd"
@@ -647,6 +658,10 @@
         "containerAudioControllers"
       );
 
+      //almacenamiento
+      let sizeDisks = document.getElementById("sizeDisks");
+      let containerDisks = document.getElementById("containerDisks");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -679,6 +694,7 @@
         versionBios.value = info.bios.version;
         releaseDateBios.value = info.bios.releaseDate;
         loadUIAudioAdapters(info.audio);
+        loadUIDisks(info.diskLayout);
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -744,15 +760,34 @@
         ipcRenderer.send("newInfo", "newInfo");
       };
 
-      function loadUIAudioAdapters(adapters) {
-        for (let i = 0; i < adapters.length; i++) {
-          let item =
-            '<li class="list-group-item">' +
-            adapters[i].manufacturer +
-            " " +
-            adapters[i].name +
-            "</li>";
-          containerAudioControllers.innerHTML += item;
+      function loadUIDisks(diskLayout) {
+        for (let i = 0; i < diskLayout.length; i++) {
+          containerDisks.innerHTML += "<h5>Unidad " + (1 + i) + "</h5>";
+
+          let nom =
+            '<div class="row">  <div class="col"> <div class="form-group"> <label for="nameDisk' +
+            i +
+            '">Nombre</label><input type="text" disabled value="' +
+            diskLayout[i].name +
+            '" class="form-control"/></div>  </div> <div class="col"> <div class="form-group"><label for="interfaceDisk' +
+            i +
+            '">Interface</label><input type="text" disabled value="' +
+            diskLayout[i].interfaceType +
+            '" class="form-control"/></div></div>  </div>';
+
+          containerDisks.innerHTML += nom;
+
+          let type =
+            '<div class="row">  <div class="col"> <div class="form-group"> <label for="typeDisk' +
+            i +
+            '">Tipo</label><input type="text" disabled value="' +
+            diskLayout[i].type +
+            '" class="form-control"/></div>  </div> <div class="col"> <div class="form-group"><label for="sizeDisk' +
+            i +
+            '">Tamaño</label><input type="text" disabled value="' +
+            formatBytes(diskLayout[i].size) +
+            '" class="form-control"/></div></div>  </div></br><hr>';
+          containerDisks.innerHTML += type;
         }
       }
 
@@ -776,5 +811,6 @@
     <script src="./assets/js/ui/network.js"></script>
     <script src="./assets/js/ui/graphics.js"></script>
     <script src="./assets/js/ui/apps.js"></script>
+    <script src="./assets/js/ui/audio.js"></script>
   </body>
 </html>

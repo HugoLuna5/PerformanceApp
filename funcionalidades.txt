@@ -1,12 +1,12 @@
 cpu *
 red *
-audio 
+audio *
 graficos *
 memoria *
 perifericos 
 aplicaciones *
 tarjeta madre *
-almacenamiento 
+almacenamiento *
 entrada y salida 
 
 sistema y otros ?

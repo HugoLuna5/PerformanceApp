@@ -81,27 +81,30 @@ function getInfo() {
                       si.graphics().then((graphics) => {
                         si.networkInterfaces((networkInterfaces) => {
                           si.audio().then((audio) => {
-                            var data = {
-                              audio: audio,
-                              apps: results.split("\n"),
-                              graphics: graphics,
-                              cpuTemperature: cpuTemperature,
-                              bios: bios,
-                              chassis: chassis,
-                              system: system,
-                              baseboard: baseboard,
-                              memory: memInfo,
-                              ram: ram,
-                              free: freeRam,
-                              cpu: cpuInfo,
-                              cpuPercentage: cpuPercentage,
-                              networkInterfaces: networkInterfaces,
-                              arch: os.arch(),
-                              systemName: os.type(),
-                              platform: os.platform(),
-                            };
+                            si.diskLayout().then((diskLayout) => {
+                              var data = {
+                                diskLayout: diskLayout,
+                                audio: audio,
+                                apps: results.split("\n"),
+                                graphics: graphics,
+                                cpuTemperature: cpuTemperature,
+                                bios: bios,
+                                chassis: chassis,
+                                system: system,
+                                baseboard: baseboard,
+                                memory: memInfo,
+                                ram: ram,
+                                free: freeRam,
+                                cpu: cpuInfo,
+                                cpuPercentage: cpuPercentage,
+                                networkInterfaces: networkInterfaces,
+                                arch: os.arch(),
+                                systemName: os.type(),
+                                platform: os.platform(),
+                              };
 
-                            indexWindow.webContents.send("data", data);
+                              indexWindow.webContents.send("data", data);
+                            });
                           });
                         });
                       });
