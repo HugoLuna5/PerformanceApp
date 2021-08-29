@@ -436,6 +436,16 @@
 
             <div
               class="tab-pane fade"
+              id="v-pills-red"
+              role="tabpanel"
+              aria-labelledby="v-pills-red-tab"
+            >
+              <h3 id="sizeNetworkAdapter">Adaptadores de red</h3>
+              <div id="containerNetworkAdapters"></div>
+            </div>
+
+            <div
+              class="tab-pane fade"
               id="v-pills-xd"
               role="tabpanel"
               aria-labelledby="v-pills-xd-tab"
@@ -475,6 +485,12 @@
       let frequencyRam = document.getElementById("frequencyRam");
       let voltageConfigured = document.getElementById("voltageConfigured");
 
+      //Network
+      let sizeNetworkAdapter = document.getElementById("sizeNetworkAdapter");
+      var containerNetworkAdapters = document.getElementById(
+        "containerNetworkAdapters"
+      );
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -496,6 +512,7 @@
         typeRam.value = info.memory[0].partNum;
         frequencyRam.value = info.memory[0].clockSpeed + " MHz";
         voltageConfigured.value = info.memory[0].voltageConfigured;
+        loadUINetworkAdapters(info.networkInterfaces);
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -575,6 +592,63 @@
             : parseFloat((a / pow(k, d)).toFixed(max(0, b))) +
                 " " +
                 ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"][d];
+        }
+      }
+
+      function loadUINetworkAdapters(adapters) {
+        sizeNetworkAdapter.textContent =
+          "Adaptadores de red: " + adapters.length;
+        for (let i = 0; i < adapters.length; i++) {
+          var type =
+            '<div class="form-group"><label for="typeNetworkAdapter' +
+            i +
+            '">Tipo de adaptador</label>';
+          containerNetworkAdapters.innerHTML += type;
+          var input =
+            '<input type="text" disabled id="typeNetworkAdapter' +
+            i +
+            ' name="typeNetworkAdapter' +
+            i +
+            '" class="form-control" value="' +
+            adapters[i].iface +
+            " - " +
+            adapters[i].ifaceName +
+            '" /></div>';
+          containerNetworkAdapters.innerHTML += input;
+
+          var ip =
+            '<div class="row"><div class="col"> <div class="form-group"> <label for="ip' +
+            i +
+            '">IPV4</label><input value="' +
+            adapters[i].ip4 +
+            '" type="text" disabled name="ip' +
+            i +
+            '" id="ip' +
+            i +
+            '" class="form-control" /></div> </div>  <div class="col"> <div class="form-group"> </div> <label for="subnet' +
+            i +
+            '">SubNet</label> <input value="' +
+            adapters[i].ip4subnet +
+            '" type="text" disabled name="subnet' +
+            i +
+            ' id="subnet' +
+            i +
+            ' class="form-control" />  </div>  <div>';
+
+          containerNetworkAdapters.innerHTML += ip;
+
+          var mac =
+            '<div class="form-group"><label for="macAddress' +
+            i +
+            '">Dirección MAC</label> <input value="' +
+            adapters[i].mac +
+            '" disabled type="text" name="macAddress' +
+            i +
+            '" id="macAddress' +
+            i +
+            '" class="form-control"/> </div> </br> <hr>';
+
+          containerNetworkAdapters.innerHTML += mac;
         }
       }
     </script>

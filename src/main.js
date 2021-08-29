@@ -81,25 +81,27 @@ function getInfo() {
                 si.chassis().then((chassis) => {
                   si.cpuTemperature().then((cpuTemperature) => {
                     si.graphics().then((graphics) => {
-                      var data = {
-                        graphics: graphics,
-                        cpuTemperature: cpuTemperature,
-                        bios: bios,
-                        chassis: chassis,
-                        system: system,
-                        baseboard: baseboard,
-                        memory: memInfo,
-                        ram: ram,
-                        free: freeRam,
-                        cpu: cpuInfo,
-                        cpuPercentage: cpuPercentage,
-                        network: os.networkInterfaces(),
-                        arch: os.arch(),
-                        systemName: os.type(),
-                        platform: os.platform(),
-                      };
+                      si.networkInterfaces((networkInterfaces) => {
+                        var data = {
+                          graphics: graphics,
+                          cpuTemperature: cpuTemperature,
+                          bios: bios,
+                          chassis: chassis,
+                          system: system,
+                          baseboard: baseboard,
+                          memory: memInfo,
+                          ram: ram,
+                          free: freeRam,
+                          cpu: cpuInfo,
+                          cpuPercentage: cpuPercentage,
+                          networkInterfaces: networkInterfaces,
+                          arch: os.arch(),
+                          systemName: os.type(),
+                          platform: os.platform(),
+                        };
 
-                      indexWindow.webContents.send("data", data);
+                        indexWindow.webContents.send("data", data);
+                      });
                     });
                   });
                 });
