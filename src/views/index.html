@@ -584,14 +584,50 @@
               <div id="containerDisks"></div>
             </div>
 
+            <!--IO-->
+
             <div
               class="tab-pane fade"
-              id="v-pills-xd"
+              id="v-pills-entradasalida"
               role="tabpanel"
-              aria-labelledby="v-pills-xd-tab"
+              aria-labelledby="v-pills-entradasalida-tab"
+            >
+              <h3>Tráfico en la red (IO)</h3>
+              <div id="containerIO"></div>
+            </div>
+
+            <!--systemAndOther-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-systemAndOther"
+              role="tabpanel"
+              aria-labelledby="v-pills-systemAndOther-tab"
             >
               ...
             </div>
+
+            <!--errores-->
+            <div
+              class="tab-pane fade"
+              id="v-pills-errores"
+              role="tabpanel"
+              aria-labelledby="v-pills-errores-tab"
+            >
+              ...
+            </div>
+
+            <!--configuracion-->
+
+            <div
+              class="tab-pane fade"
+              id="v-pills-configuracion"
+              role="tabpanel"
+              aria-labelledby="v-pills-configuracion-tab"
+            >
+              ...
+            </div>
+
+            <!--Fin-->
           </div>
         </div>
       </div>
@@ -662,6 +698,9 @@
       let sizeDisks = document.getElementById("sizeDisks");
       let containerDisks = document.getElementById("containerDisks");
 
+      // IO
+      let containerIO = document.getElementById("containerIO");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -685,16 +724,23 @@
         typeRam.value = info.memory[0].partNum;
         frequencyRam.value = info.memory[0].clockSpeed + " MHz";
         voltageConfigured.value = info.memory[0].voltageConfigured;
+        containerNetworkAdapters.innerHTML = "";
         loadUINetworkAdapters(info.networkInterfaces);
+        containerGraphicsControllers.innerHTML = "";
         loadUIGraphicsControllers(info.graphics.controllers);
+        containerListApps.innerHTML = "";
         loadUIAllApps(info.apps);
         manufacturerMainBoard.value = info.baseboard.manufacturer;
         modelMainBoard.value = info.baseboard.model;
         brandBios.value = info.bios.vendor;
         versionBios.value = info.bios.version;
         releaseDateBios.value = info.bios.releaseDate;
+        containerAudioControllers.innerHTML = "";
         loadUIAudioAdapters(info.audio);
+        containerDisks.innerHTML = "";
         loadUIDisks(info.diskLayout);
+        containerIO.innerHTML = "";
+        loadUIIO(info.networkStats);
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -760,37 +806,6 @@
         ipcRenderer.send("newInfo", "newInfo");
       };
 
-      function loadUIDisks(diskLayout) {
-        for (let i = 0; i < diskLayout.length; i++) {
-          containerDisks.innerHTML += "<h5>Unidad " + (1 + i) + "</h5>";
-
-          let nom =
-            '<div class="row">  <div class="col"> <div class="form-group"> <label for="nameDisk' +
-            i +
-            '">Nombre</label><input type="text" disabled value="' +
-            diskLayout[i].name +
-            '" class="form-control"/></div>  </div> <div class="col"> <div class="form-group"><label for="interfaceDisk' +
-            i +
-            '">Interface</label><input type="text" disabled value="' +
-            diskLayout[i].interfaceType +
-            '" class="form-control"/></div></div>  </div>';
-
-          containerDisks.innerHTML += nom;
-
-          let type =
-            '<div class="row">  <div class="col"> <div class="form-group"> <label for="typeDisk' +
-            i +
-            '">Tipo</label><input type="text" disabled value="' +
-            diskLayout[i].type +
-            '" class="form-control"/></div>  </div> <div class="col"> <div class="form-group"><label for="sizeDisk' +
-            i +
-            '">Tamaño</label><input type="text" disabled value="' +
-            formatBytes(diskLayout[i].size) +
-            '" class="form-control"/></div></div>  </div></br><hr>';
-          containerDisks.innerHTML += type;
-        }
-      }
-
       function requestNewInfo() {
         setTimeout(function () {
           ipcRenderer.send("newCPUInfo", "newCPUInfo");
@@ -812,5 +827,7 @@
     <script src="./assets/js/ui/graphics.js"></script>
     <script src="./assets/js/ui/apps.js"></script>
     <script src="./assets/js/ui/audio.js"></script>
+    <script src="./assets/js/ui/disk.js"></script>
+    <script src="./assets/js/ui/io.js"></script>
   </body>
 </html>

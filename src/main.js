@@ -4,6 +4,7 @@ const si = require("systeminformation");
 
 var osu = require("node-os-utils");
 var cpuInfoOsu = osu.cpu;
+var netstat = osu.netstat;
 
 const path = require("path");
 const os = require("os");
@@ -82,28 +83,34 @@ function getInfo() {
                         si.networkInterfaces((networkInterfaces) => {
                           si.audio().then((audio) => {
                             si.diskLayout().then((diskLayout) => {
-                              var data = {
-                                diskLayout: diskLayout,
-                                audio: audio,
-                                apps: results.split("\n"),
-                                graphics: graphics,
-                                cpuTemperature: cpuTemperature,
-                                bios: bios,
-                                chassis: chassis,
-                                system: system,
-                                baseboard: baseboard,
-                                memory: memInfo,
-                                ram: ram,
-                                free: freeRam,
-                                cpu: cpuInfo,
-                                cpuPercentage: cpuPercentage,
-                                networkInterfaces: networkInterfaces,
-                                arch: os.arch(),
-                                systemName: os.type(),
-                                platform: os.platform(),
-                              };
+                              si.networkStats("*").then((networkStats) => {
+                                si.osInfo().then((osInfo) => {
+                                  var data = {
+                                    osInfo: osInfo,
+                                    networkStats: networkStats,
+                                    diskLayout: diskLayout,
+                                    audio: audio,
+                                    apps: results.split("\n"),
+                                    graphics: graphics,
+                                    cpuTemperature: cpuTemperature,
+                                    bios: bios,
+                                    chassis: chassis,
+                                    system: system,
+                                    baseboard: baseboard,
+                                    memory: memInfo,
+                                    ram: ram,
+                                    free: freeRam,
+                                    cpu: cpuInfo,
+                                    cpuPercentage: cpuPercentage,
+                                    networkInterfaces: networkInterfaces,
+                                    arch: os.arch(),
+                                    systemName: os.type(),
+                                    platform: os.platform(),
+                                  };
 
-                              indexWindow.webContents.send("data", data);
+                                  indexWindow.webContents.send("data", data);
+                                });
+                              });
                             });
                           });
                         });
