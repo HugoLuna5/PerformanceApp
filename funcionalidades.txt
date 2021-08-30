@@ -7,11 +7,11 @@ perifericos
 aplicaciones *
 tarjeta madre *
 almacenamiento *
-entrada y salida 
+entrada y salida *
 
-sistema y otros ?
-reporte de errores 
-configuracion 
- - notificaciones
- - apagado remoto
- - reinicio remoto
+sistema y otros *
+reporte de errores *
+configuracion *
+ - notificaciones *
+ - apagado remoto *
+ - reinicio remoto *

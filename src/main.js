@@ -16,6 +16,9 @@ const store = new Store({
   defaults: {
     // 800x600 is the default size of our window
     token: "",
+    poweroffRemote: true,
+    rebootRemote: true,
+    notifications: true,
   },
 });
 
@@ -106,6 +109,11 @@ function getInfo() {
                                     arch: os.arch(),
                                     systemName: os.type(),
                                     platform: os.platform(),
+                                    configOptios: {
+                                      reboot: store.get("rebootRemote"),
+                                      poweroff: store.get("poweroffRemote"),
+                                      notifications: store.get("notifications"),
+                                    },
                                   };
 
                                   indexWindow.webContents.send("data", data);

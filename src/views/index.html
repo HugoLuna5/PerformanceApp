@@ -585,7 +585,6 @@
             </div>
 
             <!--IO-->
-
             <div
               class="tab-pane fade"
               id="v-pills-entradasalida"
@@ -678,7 +677,40 @@
               role="tabpanel"
               aria-labelledby="v-pills-errores-tab"
             >
-              ...
+              <h3>Reportar un error</h3>
+
+              <div class="form-group">
+                <label for="nameError">Error</label>
+                <input
+                  type="text"
+                  name="nameError"
+                  id="nameError"
+                  required
+                  placeholder="Escribe el error del equipo"
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="descError">Describe el error</label>
+                <textarea
+                  name="descError"
+                  id="descError"
+                  required
+                  placeholder="Describe el error del equipo"
+                  class="form-control"
+                ></textarea>
+              </div>
+
+              <div class="d-grid gap-2 mt-3">
+                <button
+                  class="btn btn-outline-primary"
+                  id="sendError"
+                  type="button"
+                >
+                  REPORTAR
+                </button>
+              </div>
             </div>
 
             <!--configuracion-->
@@ -689,7 +721,49 @@
               role="tabpanel"
               aria-labelledby="v-pills-configuracion-tab"
             >
-              ...
+              <h3>Configuración de la aplicación</h3>
+
+              <fieldset>
+                <legend class="mt-4">Notificaciones</legend>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="notificaionesSwitch"
+                  />
+                  <label class="form-check-label" for="notificaionesSwitch"
+                    >Habilita o deshabilita las notificaciones</label
+                  >
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="mt-4">Reinicio remoto</legend>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="rebootRemote"
+                  />
+                  <label class="form-check-label" for="rebootRemote"
+                    >Habilita o deshabilita el reinicio remoto</label
+                  >
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="mt-4">Apagado remoto</legend>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="poweroffRemote"
+                  />
+                  <label class="form-check-label" for="poweroffRemote"
+                    >Habilita o deshabilita el apagado remoto</label
+                  >
+                </div>
+              </fieldset>
             </div>
 
             <!--Fin-->
@@ -774,6 +848,14 @@
       let platformSystem = document.getElementById("platformSystem");
       let uefiSystem = document.getElementById("uefiSystem");
 
+      //error
+      let sendError = document.getElementById("sendError");
+
+      //configuración
+      let notificaionesSwitch = document.getElementById("notificaionesSwitch");
+      let rebootRemote = document.getElementById("rebootRemote");
+      let poweroffRemote = document.getElementById("poweroffRemote");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -822,6 +904,11 @@
         kernelSystem.value = info.osInfo.kernel;
         platformSystem.value = info.osInfo.platform;
         uefiSystem.value = info.osInfo.uefi;
+
+        //config
+        notificaionesSwitch.checked = info.configOptios.notifications;
+        rebootRemote.checked = info.configOptios.reboot;
+        poweroffRemote.checked = info.configOptios.poweroff;
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
@@ -881,6 +968,10 @@
         lineChart.data.datasets[0].data = current;
         lineChart.update();
         requestNewInfo();
+      });
+
+      sendError.addEventListener("click", function (evt) {
+        console.log("Error enviado");
       });
 
       window.onload = function () {
