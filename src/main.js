@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { exec } = require("child_process");
 const si = require("systeminformation");
+const { setup: setupPushReceiver } = require("electron-push-receiver");
 
 var osu = require("node-os-utils");
 var cpuInfoOsu = osu.cpu;
@@ -60,6 +61,7 @@ function showIndexWindow() {
 
   // and load the index.html of the app.
   indexWindow.loadFile("src/views/index.html");
+  setupPushReceiver(indexWindow.webContents);
   getInfo();
 }
 
