@@ -603,7 +603,72 @@
               role="tabpanel"
               aria-labelledby="v-pills-systemAndOther-tab"
             >
-              ...
+              <h3>Información del sistema</h3>
+              <div class="form-group">
+                <label for="nameSystem">Nombre</label>
+                <input
+                  type="text"
+                  name="nameSystem"
+                  id="nameSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="archSystem">Arquitectura</label>
+                <input
+                  type="text"
+                  name="archSystem"
+                  id="archSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="hostnameSystem">Hostname</label>
+                <input
+                  type="text"
+                  name="hostnameSystem"
+                  id="hostnameSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="kernelSystem">Kernel</label>
+                <input
+                  type="text"
+                  name="kernelSystem"
+                  id="kernelSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="platformSystem">Plataforma</label>
+                <input
+                  type="text"
+                  name="platformSystem"
+                  id="platformSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="uefiSystem">UEFI</label>
+                <input
+                  type="text"
+                  name="uefiSystem"
+                  id="uefiSystem"
+                  disabled
+                  class="form-control"
+                />
+              </div>
             </div>
 
             <!--errores-->
@@ -701,6 +766,14 @@
       // IO
       let containerIO = document.getElementById("containerIO");
 
+      //sytem and other
+      let nameSystem = document.getElementById("nameSystem");
+      let archSystem = document.getElementById("archSystem");
+      let hostnameSystem = document.getElementById("hostnameSystem");
+      let kernelSystem = document.getElementById("kernelSystem");
+      let platformSystem = document.getElementById("platformSystem");
+      let uefiSystem = document.getElementById("uefiSystem");
+
       ipcRenderer.on("data", (event, info) => {
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
@@ -741,6 +814,14 @@
         loadUIDisks(info.diskLayout);
         containerIO.innerHTML = "";
         loadUIIO(info.networkStats);
+
+        //system
+        nameSystem.value = info.osInfo.distro;
+        archSystem.value = info.osInfo.arch;
+        hostnameSystem.value = info.osInfo.hostname;
+        kernelSystem.value = info.osInfo.kernel;
+        platformSystem.value = info.osInfo.platform;
+        uefiSystem.value = info.osInfo.uefi;
 
         var speedData = {
           labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
