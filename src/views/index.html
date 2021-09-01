@@ -3,12 +3,43 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/css/font-awesome.css" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.css" />
     <title>PIC</title>
+    <style>
+      .bd-example-modal-lg .modal-dialog {
+        display: table;
+        position: relative;
+        margin: 0 auto;
+        top: calc(50% - 24px);
+      }
+
+      .bd-example-modal-lg .modal-dialog .modal-content {
+        background-color: transparent;
+        border: none;
+      }
+    </style>
   </head>
 
   <body>
     <div class="container">
+      <div
+        id="myModal"
+        class="modal fade bd-example-modal-lg"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+      >
+        <div class="modal-dialog modal-sm text-center">
+          <div class="modal-content text-center float-right">
+            <div class="text-center">
+              <span class="fa fa-spinner fa-spin fa-3x"></span>
+            </div>
+            <i><h6 class="mt-2">Cargando información</h6></i>
+          </div>
+        </div>
+      </div>
+
       <div class="row mt-3">
         <div class="col-4">
           <div class="d-flex align-items-start">
@@ -764,6 +795,18 @@
                   >
                 </div>
               </fieldset>
+
+              <fieldset>
+                <div class="d-grid gap-2 mt-3">
+                  <button
+                    id="removeConfig"
+                    class="btn btn-outline-danger"
+                    type="button"
+                  >
+                    ELIMINAR CONFIGURACIÓN
+                  </button>
+                </div>
+              </fieldset>
             </div>
 
             <!--Fin-->
@@ -778,6 +821,11 @@
 
     <script>
       const { ipcRenderer } = require("electron");
+
+      var myModal = new bootstrap.Modal(document.getElementById("myModal"), {
+        keyboard: false,
+      });
+      myModal.show();
 
       var speedCanvas = document.getElementById("speedChart");
       var lineChart = null;
@@ -855,8 +903,10 @@
       let notificaionesSwitch = document.getElementById("notificaionesSwitch");
       let rebootRemote = document.getElementById("rebootRemote");
       let poweroffRemote = document.getElementById("poweroffRemote");
+      let removeConfig = document.getElementById("removeConfig");
 
       ipcRenderer.on("data", (event, info) => {
+        myModal.hide();
         console.log(info);
         nombreCPU.value = info.cpu.manufacturer + " " + info.cpu.brand;
 
@@ -953,6 +1003,12 @@
         setTimeout(function () {
           ipcRenderer.send("newCPUInfo", "newCPUInfo");
         }, 10000);
+      });
+
+      removeConfig.addEventListener("click", function (evt) {
+        ipcRenderer.send("resetConfig", "resetConfig");
+        window.location.href = "config.html";
+        location.href = "config.html";
       });
 
       ipcRenderer.on("responseNewCPUInfo", (event, info) => {

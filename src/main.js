@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const { exec } = require("child_process");
 const si = require("systeminformation");
 const { setup: setupPushReceiver } = require("electron-push-receiver");
+var HID = require("node-hid");
+var devices = HID.devices();
 
 var osu = require("node-os-utils");
 var cpuInfoOsu = osu.cpu;
@@ -16,6 +18,7 @@ const store = new Store({
   configName: "user-preferences",
   defaults: {
     // 800x600 is the default size of our window
+    deviceId: 0,
     token: "",
     poweroffRemote: true,
     rebootRemote: true,
@@ -43,6 +46,7 @@ function showConfigWindow() {
 
   // and load the index.html of the app.
   configWindow.loadFile("src/views/config.html");
+  setupPushReceiver(configWindow.webContents);
 }
 
 function showIndexWindow() {
@@ -90,35 +94,40 @@ function getInfo() {
                             si.diskLayout().then((diskLayout) => {
                               si.networkStats("*").then((networkStats) => {
                                 si.osInfo().then((osInfo) => {
-                                  var data = {
-                                    osInfo: osInfo,
-                                    networkStats: networkStats,
-                                    diskLayout: diskLayout,
-                                    audio: audio,
-                                    apps: results.split("\n"),
-                                    graphics: graphics,
-                                    cpuTemperature: cpuTemperature,
-                                    bios: bios,
-                                    chassis: chassis,
-                                    system: system,
-                                    baseboard: baseboard,
-                                    memory: memInfo,
-                                    ram: ram,
-                                    free: freeRam,
-                                    cpu: cpuInfo,
-                                    cpuPercentage: cpuPercentage,
-                                    networkInterfaces: networkInterfaces,
-                                    arch: os.arch(),
-                                    systemName: os.type(),
-                                    platform: os.platform(),
-                                    configOptios: {
-                                      reboot: store.get("rebootRemote"),
-                                      poweroff: store.get("poweroffRemote"),
-                                      notifications: store.get("notifications"),
-                                    },
-                                  };
+                                  si.usb((usb) => {
+                                    var data = {
+                                      usb: usb,
+                                      devices: devices,
+                                      osInfo: osInfo,
+                                      networkStats: networkStats,
+                                      diskLayout: diskLayout,
+                                      audio: audio,
+                                      apps: results.split("\n"),
+                                      graphics: graphics,
+                                      cpuTemperature: cpuTemperature,
+                                      bios: bios,
+                                      chassis: chassis,
+                                      system: system,
+                                      baseboard: baseboard,
+                                      memory: memInfo,
+                                      ram: ram,
+                                      free: freeRam,
+                                      cpu: cpuInfo,
+                                      cpuPercentage: cpuPercentage,
+                                      networkInterfaces: networkInterfaces,
+                                      arch: os.arch(),
+                                      systemName: os.type(),
+                                      platform: os.platform(),
+                                      configOptios: {
+                                        reboot: store.get("rebootRemote"),
+                                        poweroff: store.get("poweroffRemote"),
+                                        notifications:
+                                          store.get("notifications"),
+                                      },
+                                    };
 
-                                  indexWindow.webContents.send("data", data);
+                                    indexWindow.webContents.send("data", data);
+                                  });
                                 });
                               });
                             });
@@ -148,8 +157,12 @@ function formatBytes(a, b = 2, k = 1024) {
   }
 }
 
-ipcMain.on("saveToken", function (event, args) {
-  store.set("token", args);
+ipcMain.on("saveToken", function (event, data) {
+  store.set("deviceId", data.deviceId);
+  store.set("token", data.token);
+  store.set("poweroffRemote", true);
+  store.set("rebootRemote", true);
+  store.set("notifications", true);
 });
 
 ipcMain.on("newCPUInfo", function (event, arg) {
@@ -163,14 +176,21 @@ ipcMain.on("newInfo", function (event, args) {
   getInfo();
 });
 
+ipcMain.on("resetConfig", function (evt, args) {
+  store.set("deviceId", 0);
+  store.set("token", "");
+  store.set("poweroffRemote", false);
+  store.set("rebootRemote", false);
+  store.set("notifications", false);
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   let token = store.get("token");
-  console.log(token);
-
-  if (token == "") {
+  let deviceId = store.get("deviceId");
+  if (token == "" || deviceId == 0) {
     showConfigWindow();
   } else {
     showIndexWindow();

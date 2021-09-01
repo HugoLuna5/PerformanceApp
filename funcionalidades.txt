@@ -8,7 +8,6 @@ aplicaciones *
 tarjeta madre *
 almacenamiento *
 entrada y salida *
-
 sistema y otros *
 reporte de errores *
 configuracion *

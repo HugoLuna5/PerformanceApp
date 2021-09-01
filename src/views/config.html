@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/css/bootstrap.css" />
     <title>PIC</title>
   </head>
 
@@ -26,8 +26,8 @@
                 Performance Information Collector
               </h4>
 
-              <div>
-                <div class="form-group text-center">
+              <div class="mt-4">
+                <div class="form-group text-left">
                   <label for="token"
                     >Ingresa el token de autorización de tu servidor</label
                   >
@@ -35,6 +35,19 @@
                     type="text"
                     name="token"
                     id="token"
+                    class="form-control mt-1"
+                    required
+                  />
+                </div>
+
+                <div class="form-group text-left mt-2">
+                  <label for="deviceId"
+                    >Ingresa el identificador del equipo</label
+                  >
+                  <input
+                    type="text"
+                    name="deviceId"
+                    id="deviceId"
                     class="form-control mt-1"
                     required
                   />
@@ -64,10 +77,14 @@
 
       element.addEventListener("click", function () {
         let token = document.getElementById("token").value;
-        ipcRenderer.send("saveToken", token);
+        let deviceId = document.getElementById("deviceId").value;
+        let data = {
+          token: token,
+          deviceId: deviceId,
+        };
+        ipcRenderer.send("saveToken", data);
         window.location.href = "index.html";
         location.href = "index.html";
-        console.log("GG");
       });
     </script>
   </body>
